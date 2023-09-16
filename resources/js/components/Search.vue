@@ -1,7 +1,9 @@
 <template>
   <div>
+  <!-- Search Form -->
     <div class="search-form">
       <h2>Property Search</h2>
+      <!-- Form to input search parameters -->
       <form @submit.prevent="searchProperties">
         <div class="form-group">
           <label for="name">Name</label>
@@ -31,11 +33,16 @@
           <label for="price_max">Price Max</label>
           <input type="number" id="price_max" v-model="searchQuery.price_max" />
         </div>
+        <!-- Add similar input fields for other search parameters here -->
         <button type="submit">Search</button>
       </form>
     </div>
+
+    <!-- Search Results -->
     <div class="search-results">
       <div v-if="loading" class="loading-indicator">Loading...</div>
+
+      <!-- Display search results in a table -->
       <table v-if="!loading" class="results-table">
         <thead>
           <tr>
@@ -71,6 +78,7 @@
 export default {
   data() {
     return {
+      // Data for storing search parameters, results, and loading state
       searchQuery: {
         name: '',
         bedrooms: null,
@@ -86,7 +94,7 @@ export default {
   },
   methods: {
     searchProperties() {
-      this.loading = true;
+      this.loading = true; // Set loading state to true while fetching results
       const apiUrl = '/search'; // Adjust the URL to match your Laravel API endpoint
 
       // Prepare the search parameters
@@ -94,20 +102,18 @@ export default {
         params: this.searchQuery,
       };
 
+      // Send an AJAX GET request to the API
       axios.get(apiUrl, queryParams)
         .then((response) => {
+          // Update the properties data with the search results
           this.properties = response.data;
-          this.loading = false;
+          this.loading = false; // Set loading state to false when done
         })
         .catch((error) => {
-          console.error('Error:', error);
-          this.loading = false;
+          console.error('Error:', error); // Log any errors
+          this.loading = false; // Set loading state to false in case of error
         });
     },
   },
 };
 </script>
-
-<style scoped>
-/* Add your CSS styles here */
-</style>
